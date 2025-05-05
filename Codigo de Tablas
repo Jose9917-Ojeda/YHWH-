@@ -1,0 +1,115 @@
+Create Table Empleados (
+    Id_Empleado Int Primary Key Identity(1,1),
+    Cedula Varchar(10) Unique Not Null,
+    Nombre_Empleado VARCHAR(50) Not Null,
+    Area Varchar(50) Not Null
+);
+
+Create Table Centros_de_Costo (
+    Id_Centro_Costo Int Primary Key Identity(1,1),
+    Nombre_del_Centro Varchar(100) Unique Not Null
+);
+
+Create Table Partida_Presupuestal (
+    Id_Partida_Presupuestal Int Primary Key Identity(1,1),
+    Nombre_Partida_Presupuestal Varchar(100) Unique Not Null
+);
+
+Create Table Bienes (
+    Codigo_Universal Varchar(50) Primary Key,
+    Nombre__del_Bien Varchar(200) Not Null,
+    Tipo_del_Bien Varchar(20) Check (tipo_del_Bien IN ('Devolutivo', 'Suministro', 'Inmueble')) Not Null,
+    Unidad_Medida Varchar(50) Not Null
+);
+
+Create Table Solicitudes_de_Compra (
+    Numero_Solicitud Int Primary Key Identity(1,1),
+    Fecha_Solicitud Date Not Null,
+    Id_Responsable Int Not Null Foreign Key References Empleados(Id_Empleado),
+    Id_Centro_Costo Int Not Null Foreign Key References Centros_de_Costo(Id_Centro_Costo),
+    Id_Partida_Presupuestal Int Not Null Foreign Key References Partida_Presupuestal(Id_Partida_Presupuestal),
+    Total_Solicitud Decimal(10,2) Not Null,
+    Autorizado_Jefe Bit,
+    Autorizado_Director Bit
+);
+
+Create Table Empleados_Centros_Costo (
+    Id_Empleado Int Not Null Foreign Key References Empleados(Id_Empleado),
+    Id_Centro_Costo INT Not Null Foreign Key References Centros_de_Costo(Id_Centro_Costo),
+    Primary Key (Id_Empleado, Id_Centro_Costo)
+);
+
+Create Table Items_de_Solicitud (
+    Id_Item_Solicitud Int Primary Key Identity(1,1),
+    Numero_Solicitud Int Not Null Foreign Key References Solicitudes_de_Compra(Numero_Solicitud),
+    Codigo_Universal Varchar(50) Not Null Foreign Key References Bienes(Codigo_Universal),
+    Cantidad_Solicitada Decimal(10,2) Not Null,
+    Unidad_Medida Varchar(50) Not Null,
+    Valor_Unitario Decimal(10,2) Not Null,
+    Valor_Total_Item Decimal(10,2) Not Null
+);
+
+Create Table Proveedores (
+    Nit_Proveedor Varchar(20) Primary Key,
+    Nombre_del_Proveedor Varchar(100) Not Null
+);
+
+Create Table Ordenes_de_Compra (
+    Numero_de_Orden Int Primary Key Identity(1,1),
+    Nit_Proveedor Varchar(20) Not Null Foreign Key References Proveedores(Nit_Proveedor),
+    Fecha_de_la_Orden Date Not Null,
+    monto_Total_Orden Decimal(10,2) Not Null,
+    Fecha_de_Entrega_Prevista Date,
+    Aprobado_Director Bit
+);
+
+Create Table Ordenes_de_Compra_Items_Solicitud (
+    Numero_de_Orden Int Not Null Foreign Key References Ordenes_de_Compra(Numero_de_Orden),
+    Id_Item_Solicitud Int Not Null Foreign Key References Items_de_Solicitud(Id_Item_Solicitud),
+    Cantidad_Despachada Decimal(10,2) Not Null,
+    Valor_Unitario Decimal(10,2) Not Null,
+    Valor_Total_Item Decimal(10,2) Not Null,
+    Primary Key (Numero_de_Orden, Id_Item_Solicitud)
+);
+
+Create Table Entradas_al_Almacen (
+    Numero_Entrada Int Primary Key Identity(1,1),
+    Fecha_Entrada Date Not Null,
+    Numero_Factura Varchar(50) Not Null,
+    Nit_Proveedor Varchar(20) Not Null Foreign Key References Proveedores(Nit_Proveedor),
+    Total_de_Bienes Int Not Null,
+    Valor_Total_Factura Decimal(10,2) Not Null,
+    Numero_de_Orden Int Foreign Key References Ordenes_de_Compra(Numero_de_Orden)
+);
+
+Create Table Items_Entrada_Almacen (
+    Id_Item_Entrada Int Primary Key Identity(1,1),
+    Numero_Entrada Int Not Null Foreign Key References Entradas_al_Almacen(numero_entrada),
+    Codigo_Universal Varchar(50) Not Null Foreign Key References Bienes(codigo_universal),
+    Cantidad_Entregada Decimal(10,2) Not Null
+);
+
+Create Table Salidas_del_Almacen (
+    Numero_de_Salida Int Primary Key Identity(1,1),
+    Id_Responsable Int Not Null Foreign Key References Empleados(id_empleado),
+    Fecha_de_Salida Date Not Null,
+    Fecha_de_Entrega Date,
+    Numero_de_Entrada Int Not Null Foreign Key References Entradas_al_Almacen(numero_entrada)
+);
+
+Create Table Items_Salida_Almacen (
+    Id_Item_de_Salida Int Primary Key Identity(1,1),
+    Numero_Salida Int Not Null Foreign Key References Salidas_del_Almacen(Numero_de_Salida),
+    Codigo_Universal Varchar(50) Not Null Foreign Key REferences Bienes(Codigo_Universal),
+    Cantidad_Entregada Decimal(10,2) Not Null
+);
+
+Create Table Inventario (
+    Id_de_Inventario Int Primary Key Identity(1,1),
+    Codigo_Interno Varchar(50) Unique Not Null,
+    Codigo_Universal Varchar(50) Not Null Foreign Key References Bienes(Codigo_Universal),
+    Id_del_Responsable Int Not Null Foreign Key References Empleados(Id_Empleado),
+    Fecha_de_Entrega Date Not Null,
+    Direccion_del_Bien Varchar(200) Not Null,
+    Numero_de_Salida Int Not Null Foreign Key References Salidas_del_Almacen(Numero_de_Salida)
+);
