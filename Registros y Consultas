@@ -1,0 +1,55 @@
+Insert Into Empleados (Cedula, Nombre_Empleado, Area) Values
+('123456789', 'Julian Gomez', 'Compras'),
+('987654321', 'Salome Herrera', 'Almacén'),
+('112233445', 'Carlos Ortegate', 'Inventario'),
+('556677889', 'Ana Valvuena', 'Administración');
+
+Insert Into Centros_de_Costo (Nombre_del_Centro) Values
+('Administración'),
+('Ventas'),
+('Producción');
+
+Insert Into Partida_Presupuestal (Nombre_Partida_Presupuestal) Values
+('Material de Oficina'),
+('Suministros de Limpieza'),
+('Equipamiento Informático');
+
+Insert Into Bienes (Codigo_Universal, Nombre__del_Bien, Tipo_del_Bien, Unidad_Medida) Values
+('PapelScott001', 'Paquete de Papel Higiénico', 'Suministro', 'Paquete'),
+('LapiceroAzul002', 'Lapicero Azul', 'Suministro', 'Unidad'),
+('Escritorio003', 'Escritorio de Oficina', 'Devolutivo', 'Unidad'),
+('ComputadoraYHWH001', 'Computadora de Escritorio YHWH', 'Devolutivo', 'Unidad');
+
+Insert Into Proveedores (Nit_Proveedor, Nombre_del_Proveedor) Values
+('800123456-7', 'Papeles Nacionales S.A.'),
+('901876543-2', 'Suministros Generales SAS');
+
+Insert Into Solicitudes_de_Compra (Fecha_Solicitud, Id_Responsable, Id_Centro_Costo, Id_Partida_Presupuestal,
+                                   Total_Solicitud, Autorizado_Jefe, Autorizado_Director) Values
+('2025-05-04', 1, 1, 1, 55.00, 1, 1);
+
+Insert Into Empleados_Centros_Costo (id_empleado, id_centro_costo) Values
+(1, 1);
+
+Insert Into Ordenes_de_Compra (Nit_Proveedor, Fecha_de_la_Orden, monto_Total_Orden,
+                               Fecha_de_Entrega_Prevista, Aprobado_Director) Values
+('800123456-7', '2025-05-05', 50.000, '2025-05-10', 1);
+
+
+Insert Into Entradas_al_Almacen (Fecha_Entrada, Numero_Factura, Nit_Proveedor, Total_de_Bienes,
+                                 Valor_Total_Factura, Numero_de_Orden) Values
+('2025-05-10', 'FAC-001', '800123456-7', 5, 50.00, 1);
+
+Insert Into Salidas_del_Almacen (Id_Responsable, Fecha_de_Salida, Fecha_de_Entrega, Numero_de_Entrada) Values
+(4, '2025-05-11', '2025-05-12', 1);
+
+Select * From Empleados 
+Select * From  Centros_de_Costo
+Select * From Partida_Presupuestal
+Select * From Bienes
+Select * From Proveedores
+Select * From Solicitudes_de_Compra
+Select * From Empleados_Centros_Costo
+Select * From Ordenes_de_Compra
+Select * From Entradas_al_Almacen
+Select * From Salidas_del_Almacen
